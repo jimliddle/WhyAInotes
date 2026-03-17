@@ -2,7 +2,7 @@
 
 A local-first, AI-powered note-taking application and Evernote (.enex) explorer built entirely in a single HTML file.
 
-Nexus Notes allows you to import your Evernote backups, organize your thoughts, and interact with your personal knowledge base using Google's Gemini AI—all while keeping your data strictly local and secure.
+Nexus Notes allows you to import your Evernote backups, organize your thoughts, and interact with your personal knowledge base using Google's Gemini AI, all while keeping your data strictly local and secure.
 
 ### ✨ Features
 
