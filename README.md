@@ -64,6 +64,6 @@ Data Ownership: You own your data. Unless you query the AI assistant, your data 
 
 Encrypted Backups: The "Secure Backup" feature uses PBKDF2 for key derivation (100,000 iterations) and AES-GCM for encryption, ensuring your exported data is safe at rest.
 
-##📄 License
+### 📄 License
 
 This project is open-source and available under the MIT License.
