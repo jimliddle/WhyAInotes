@@ -1,14 +1,14 @@
-## Why AIs Notes 🧠📓
+## WhyAI Notes 🧠📓
 
 A local-first, AI-powered note-taking application and Evernote (.enex) explorer built entirely in a single HTML file.
 
-Why AIs Notes allows you to import your Evernote backups, organize your thoughts, and interact with your personal knowledge base using Google's Gemini AI, all while keeping your data strictly local and secure.
+WhyAI Notes allows you to import your Evernote backups, organize your thoughts, and interact with your personal knowledge base using Google's Gemini AI, all while keeping your data strictly local and secure.
 
 ### ✨ Features
 
 🏠 Local-First Architecture: Your notes, images, PDFs, and chat histories are stored entirely offline in your browser's IndexedDB. No backend servers, no cloud databases, zero latency.
 
-🐘 Evernote (.enex) Import: Seamlessly import your Evernote exports. Why AIs Notes parses titles, HTML content, dates, and base64-encoded attachments (images and PDFs) locally.
+🐘 Evernote (.enex) Import: Seamlessly import your Evernote exports. WhyAI Notes parses titles, HTML content, dates, and base64-encoded attachments (images and PDFs) locally.
 
 🤖 AI Assistant (Gemini 2.5 Flash): Chat directly with your documents. The app intelligently injects the active note's text, images, and PDFs into the AI context, allowing you to ask questions, summarize, and analyze your data.
 
@@ -20,7 +20,7 @@ Why AIs Notes allows you to import your Evernote backups, organize your thoughts
 
 ### 🚀 Getting Started
 
-Because Why AIs Notes is a zero-dependency, single-file web application, setup is instant.
+Because WhyAI Notes is a zero-dependency, single-file web application, setup is instant.
 
 You can use the App directly from your browser and all state is stored on your loccal browser - nothing server-side: https://jimliddle.github.io/WhyAInotes/
 
@@ -50,7 +50,7 @@ AI Integration: Google Generative AI REST API (gemini-2.5-flash)
 
 ### 💡 How the AI Context Works
 
-To preserve API tokens and optimize response times, Why AIs Notes uses a smart context-injection strategy:
+To preserve API tokens and optimize response times, WhyAI Notes uses a smart context-injection strategy:
 
 When you ask your first question about a note, the app automatically bundles the note's parsed HTML text, alongside any supported attachments (Images and PDFs).
 
