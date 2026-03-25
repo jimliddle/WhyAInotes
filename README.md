@@ -66,6 +66,8 @@ Data Ownership: You own your data. Unless you query the AI assistant, your data 
 
 Encrypted Backups: The "Secure Backup" feature uses PBKDF2 for key derivation (100,000 iterations) and AES-GCM for encryption, ensuring your exported data is safe at rest.
 
+Encryption Password: When you enable the "Local App Lock" in the Settings, the app generates a master key (using PBKDF2 and a secure salt) and encrypts every single note, image, and chat history stored inside the  browser's IndexedDB using AES-GCM. When you close the tab, the key is destroyed from memory. The next time you open the app, it will display a Lock Screen. Until the correct password is provided, Data remains completely unreadable cipher-text—even if someone physically opens the  browser's Developer Tools to inspect the database.
+
 ### 📄 License
 
 This project is open-source and available under the MIT License.
