@@ -44,7 +44,27 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 flex h-screen overflow-hidden text-gray-800 font-sans antialiased">
+<body class="bg-gray-50 flex h-[100dvh] overflow-hidden text-gray-800 font-sans antialiased relative">
+
+    <!-- Lock Screen Overlay -->
+    <div id="lock-screen" class="fixed inset-0 bg-gray-50 z-[100] flex flex-col items-center justify-center hidden backdrop-blur-md">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full space-y-6 text-center border border-gray-100">
+            <div class="bg-indigo-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-indigo-600 mb-2 shadow-inner">
+                <i data-lucide="lock" class="w-8 h-8"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">App Locked</h2>
+                <p class="text-sm text-gray-500 mt-2">Enter your master password to decrypt and access your local data.</p>
+            </div>
+            <form onsubmit="event.preventDefault(); unlockApp();" class="space-y-4">
+                <input type="password" id="unlock-password" class="w-full border border-gray-300 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm" placeholder="Master Password" autofocus>
+                <p id="unlock-error" class="text-red-500 text-sm font-medium hidden">Incorrect password.</p>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium p-3.5 rounded-xl shadow-md transition flex justify-center items-center gap-2">
+                    <i data-lucide="unlock" class="w-4 h-4"></i> Unlock Notes
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- App Container -->
     <div class="flex flex-col md:flex-row w-full h-full">
@@ -78,7 +98,7 @@
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-2 space-y-1" id="notes-list">
+            <div class="flex-1 overflow-y-auto p-2 space-y-1 pb-24 md:pb-2" id="notes-list">
                 <!-- Notes injected here -->
                 <div class="text-center p-6 text-gray-400 text-sm mt-10">
                     <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
@@ -92,7 +112,7 @@
         <main class="flex-1 bg-white flex flex-col h-full w-full hidden md:flex relative shadow-xl z-0">
             
             <!-- Note Viewer -->
-            <div id="note-view" class="flex-1 overflow-y-auto p-8 lg:p-12 hidden">
+            <div id="note-view" class="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 pb-24 md:pb-8 hidden">
                 <div class="max-w-3xl mx-auto w-full">
                     <div class="flex justify-between items-start mb-2 gap-4">
                         <h2 id="note-title" class="text-3xl font-bold text-gray-900 flex-1"></h2>
@@ -137,7 +157,7 @@
             </div>
 
             <!-- Note Creation/Edit Form -->
-            <div id="create-view" class="flex-1 overflow-y-auto p-8 lg:p-12 hidden bg-white">
+            <div id="create-view" class="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-12 pb-24 md:pb-8 hidden bg-white">
                 <div class="max-w-3xl mx-auto w-full space-y-6">
                     <div class="flex justify-between items-center border-b pb-4">
                         <h2 id="create-view-title" class="text-2xl font-bold text-gray-900">Create New Note</h2>
@@ -187,7 +207,7 @@
             </div>
 
             <!-- Empty State -->
-            <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-gray-400 p-8">
+            <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-gray-400 p-8 pb-24 md:pb-8">
                 <div class="bg-gray-50 p-6 rounded-full mb-4 border border-gray-100">
                     <i data-lucide="file-text" class="w-12 h-12 text-gray-300"></i>
                 </div>
@@ -214,7 +234,7 @@
                 </div>
             </div>
 
-            <div class="p-3 bg-white border-t border-gray-200">
+            <div class="p-3 pb-24 md:pb-3 bg-white border-t border-gray-200">
                 <form id="chat-form" class="flex items-end gap-2" onsubmit="handleChatSubmit(event)">
                     <textarea id="chat-input" rows="1" class="flex-1 resize-none border border-gray-300 rounded-xl p-3 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm max-h-32 shadow-sm transition" placeholder="Ask about this note..." disabled></textarea>
                     <button type="submit" id="chat-submit" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm" disabled>
@@ -257,6 +277,26 @@
                     <div class="flex justify-between items-center text-sm text-gray-600 bg-white border border-gray-200 p-3 rounded-lg shadow-sm">
                         <span class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-gray-400"></i> Local Data Size</span>
                         <span id="storage-size" class="font-medium text-indigo-600">Calculating...</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100">
+                    <h4 class="text-sm font-semibold text-gray-800 mb-2">Local App Lock <span class="bg-indigo-100 text-indigo-800 text-[10px] px-2 py-0.5 rounded-full uppercase ml-1">New</span></h4>
+                    <p class="text-xs text-gray-500 mb-3">Encrypts your entire database securely at rest. You will need this password every time you open the app.</p>
+                    
+                    <div id="app-lock-setup" class="space-y-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <input type="password" id="app-lock-password" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition max-w-full" placeholder="Create a master password">
+                        <p class="text-[11px] text-red-500 hidden" id="app-lock-warning"><i data-lucide="alert-triangle" class="w-3 h-3 inline"></i> Warning: There is no password recovery.</p>
+                        <button onclick="setupAppLock()" class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 shadow-sm">
+                            <i data-lucide="lock" class="w-4 h-4"></i> Enable Full Encryption
+                        </button>
+                    </div>
+
+                    <div id="app-lock-active" class="space-y-3 bg-green-50 p-3 rounded-lg border border-green-200 hidden">
+                        <p class="text-sm text-green-800 font-medium flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> Local database is encrypted</p>
+                        <button onclick="removeAppLock()" class="w-full px-4 py-2 bg-white hover:bg-gray-50 text-red-600 border border-gray-200 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 shadow-sm">
+                            <i data-lucide="unlock" class="w-4 h-4"></i> Remove Lock & Decrypt
+                        </button>
                     </div>
                 </div>
 
@@ -312,7 +352,7 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-16 md:bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-white text-sm font-medium">
+    <div id="toast" class="fixed bottom-24 md:bottom-6 right-4 md:right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-white text-sm font-medium">
         <i id="toast-icon" class="w-5 h-5"></i>
         <span id="toast-message"></span>
     </div>
@@ -335,6 +375,57 @@
 
         let draftResources = []; // Temporarily hold attachments while creating a note
         let activeBlobUrls = []; // Track PDF blob URLs to prevent memory leaks
+        
+        let appKey = null; // Holds the derived crypto key when App Lock is active
+
+        // --- 1.5 Local DB Transparent Encryption Helpers ---
+        async function encryptDBItem(obj) {
+            if (!appKey) return obj;
+            if (obj._isEncrypted) return obj;
+
+            const itemId = obj.id || obj.noteId; // Grab ID for indexing
+
+            const dataStr = JSON.stringify(obj);
+            const dataBytes = new TextEncoder().encode(dataStr);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            
+            const ciphertext = await crypto.subtle.encrypt(
+                { name: "AES-GCM", iv: iv },
+                appKey,
+                dataBytes
+            );
+            
+            const wrapper = {
+                _isEncrypted: true,
+                iv: Array.from(iv),
+                data: new Uint8Array(ciphertext)
+            };
+            
+            if (obj.id) wrapper.id = obj.id;
+            if (obj.noteId) wrapper.noteId = obj.noteId;
+            
+            return wrapper;
+        }
+
+        async function decryptDBItem(item) {
+            if (!item || !item._isEncrypted) return item;
+            if (!appKey) throw new Error("Attempting to read encrypted data without unlocking.");
+
+            try {
+                const iv = new Uint8Array(item.iv);
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    appKey,
+                    item.data
+                );
+                
+                const jsonStr = new TextDecoder().decode(decrypted);
+                return JSON.parse(jsonStr);
+            } catch (e) {
+                console.error("Decryption failed for item:", item);
+                throw e; // Corrupted or wrong key
+            }
+        }
 
         // --- 2. Database Integration (IndexedDB) ---
         function initDB() {
@@ -364,10 +455,11 @@
         }
 
         async function saveNote(note) {
+            const dataToStore = await encryptDBItem(note);
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(['notes'], 'readwrite');
                 const store = transaction.objectStore('notes');
-                store.put(note);
+                store.put(dataToStore);
                 transaction.oncomplete = () => resolve();
                 transaction.onerror = (e) => reject(e.target.error);
             });
@@ -378,7 +470,14 @@
                 const transaction = db.transaction(['notes'], 'readonly');
                 const store = transaction.objectStore('notes');
                 const request = store.getAll();
-                request.onsuccess = () => resolve(request.result.sort((a, b) => b.created - a.created));
+                request.onsuccess = async () => {
+                    try {
+                        const results = await Promise.all((request.result || []).map(decryptDBItem));
+                        resolve(results.sort((a, b) => b.created - a.created));
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
                 request.onerror = (e) => reject(e.target.error);
             });
         }
@@ -388,7 +487,13 @@
                 const transaction = db.transaction(['notes'], 'readonly');
                 const store = transaction.objectStore('notes');
                 const request = store.get(id);
-                request.onsuccess = () => resolve(request.result);
+                request.onsuccess = async () => {
+                    try {
+                        resolve(await decryptDBItem(request.result));
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
                 request.onerror = (e) => reject(e.target.error);
             });
         }
@@ -407,10 +512,11 @@
         }
 
         async function saveChat(noteId, messages) {
+            const dataToStore = await encryptDBItem({ noteId, messages });
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(['chats'], 'readwrite');
                 const store = transaction.objectStore('chats');
-                store.put({ noteId, messages });
+                store.put(dataToStore);
                 transaction.oncomplete = () => {
                     // Sync in-memory state for search
                     const existingIdx = state.allChats.findIndex(c => c.noteId === noteId);
@@ -430,7 +536,14 @@
                 const transaction = db.transaction(['chats'], 'readonly');
                 const store = transaction.objectStore('chats');
                 const request = store.get(noteId);
-                request.onsuccess = () => resolve(request.result ? request.result.messages : []);
+                request.onsuccess = async () => {
+                    try {
+                        const res = await decryptDBItem(request.result);
+                        resolve(res ? res.messages : []);
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
                 request.onerror = (e) => reject(e.target.error);
             });
         }
@@ -440,7 +553,14 @@
                 const transaction = db.transaction(['chats'], 'readonly');
                 const store = transaction.objectStore('chats');
                 const request = store.getAll();
-                request.onsuccess = () => resolve(request.result || []);
+                request.onsuccess = async () => {
+                    try {
+                        const results = await Promise.all((request.result || []).map(decryptDBItem));
+                        resolve(results);
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
                 request.onerror = (e) => reject(e.target.error);
             });
         }
@@ -482,7 +602,7 @@
                     this.style.height = (this.scrollHeight) + "px";
                 });
             } catch (err) {
-                showToast("Failed to initialize database", "error");
+                showToast("Failed to initialize or decrypt database", "error");
                 console.error(err);
             }
         }
@@ -1366,6 +1486,107 @@
             );
         }
 
+        // Setup App Lock
+        async function setupAppLock() {
+            const pwd = document.getElementById('app-lock-password').value;
+            if (!pwd) return showToast("Enter a password to lock the app", "error");
+
+            document.getElementById('app-lock-setup').style.pointerEvents = 'none';
+            document.getElementById('app-lock-setup').style.opacity = '0.5';
+            showToast("Encrypting database... please wait.", "info");
+
+            try {
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                const tempKey = await deriveKey(pwd, salt);
+
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const validationStr = new TextEncoder().encode("VALID_WAI");
+                const encryptedValidation = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, tempKey, validationStr);
+
+                localStorage.setItem('whyai_auth_salt', btoa(String.fromCharCode(...salt)));
+                localStorage.setItem('whyai_auth_iv', btoa(String.fromCharCode(...iv)));
+                localStorage.setItem('whyai_auth_verify', btoa(String.fromCharCode(...new Uint8Array(encryptedValidation))));
+
+                appKey = tempKey;
+
+                for (const n of state.notes) await saveNote(n);
+                for (const c of state.allChats) await saveChat(c.noteId, c.messages);
+
+                showToast("App Lock enabled. Your data is now encrypted.", "success");
+                renderSettingsAppLockUI();
+            } catch (e) {
+                console.error(e);
+                appKey = null;
+                showToast("Failed to enable lock.", "error");
+            } finally {
+                document.getElementById('app-lock-setup').style.pointerEvents = 'auto';
+                document.getElementById('app-lock-setup').style.opacity = '1';
+            }
+        }
+
+        async function removeAppLock() {
+            if (!confirm("Remove app lock? Your data will be stored locally without encryption.")) return;
+
+            document.getElementById('app-lock-active').style.pointerEvents = 'none';
+            document.getElementById('app-lock-active').style.opacity = '0.5';
+            showToast("Decrypting database... please wait.", "info");
+
+            try {
+                localStorage.removeItem('whyai_auth_salt');
+                localStorage.removeItem('whyai_auth_iv');
+                localStorage.removeItem('whyai_auth_verify');
+
+                appKey = null; 
+
+                for (const n of state.notes) await saveNote(n);
+                for (const c of state.allChats) await saveChat(c.noteId, c.messages);
+
+                showToast("App Lock removed.", "success");
+                renderSettingsAppLockUI();
+            } catch(e) {
+                console.error(e);
+                showToast("Failed to remove lock.", "error");
+            } finally {
+                document.getElementById('app-lock-active').style.pointerEvents = 'auto';
+                document.getElementById('app-lock-active').style.opacity = '1';
+            }
+        }
+
+        async function unlockApp() {
+            const pwd = document.getElementById('unlock-password').value;
+            if (!pwd) return;
+
+            const errorEl = document.getElementById('unlock-error');
+            errorEl.classList.add('hidden');
+
+            try {
+                const saltBase64 = localStorage.getItem('whyai_auth_salt');
+                const ivBase64 = localStorage.getItem('whyai_auth_iv');
+                const verifyBase64 = localStorage.getItem('whyai_auth_verify');
+
+                const salt = new Uint8Array(atob(saltBase64).split('').map(c => c.charCodeAt(0)));
+                const iv = new Uint8Array(atob(ivBase64).split('').map(c => c.charCodeAt(0)));
+                const verifyData = new Uint8Array(atob(verifyBase64).split('').map(c => c.charCodeAt(0)));
+
+                const key = await deriveKey(pwd, salt);
+
+                const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, verifyData);
+                const str = new TextDecoder().decode(decrypted);
+
+                if (str === "VALID_WAI") {
+                    appKey = key;
+                    document.getElementById('lock-screen').classList.add('hidden');
+                    document.getElementById('unlock-password').value = '';
+                    initApp(); 
+                } else {
+                    throw new Error("Invalid");
+                }
+            } catch (e) {
+                errorEl.textContent = "Incorrect password.";
+                errorEl.classList.remove('hidden');
+            }
+        }
+
         function updateExportScopeOptions() {
             const select = document.getElementById('export-scope');
             if (!select) return;
@@ -1547,7 +1768,7 @@
                         cleanupBlobUrls();
                     }
 
-                    // Re-populate DB
+                    // Re-populate DB (If App Lock is on, this transparently encrypts!)
                     let importedCount = 0;
                     for (const note of parsedNotes) {
                         await saveNote(note);
@@ -1621,6 +1842,18 @@
             }
         }
 
+        function renderSettingsAppLockUI() {
+            const hasLock = !!localStorage.getItem('whyai_auth_salt');
+            if (hasLock) {
+                document.getElementById('app-lock-setup').classList.add('hidden');
+                document.getElementById('app-lock-active').classList.remove('hidden');
+            } else {
+                document.getElementById('app-lock-setup').classList.remove('hidden');
+                document.getElementById('app-lock-active').classList.add('hidden');
+                document.getElementById('app-lock-password').value = '';
+            }
+        }
+
         async function toggleSettings() {
             const modal = document.getElementById('settings-modal');
             const content = document.getElementById('settings-modal-content');
@@ -1631,6 +1864,8 @@
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-95');
                 content.classList.add('scale-100');
+                
+                renderSettingsAppLockUI();
                 
                 // Calculate and display storage size
                 const sizeDisplay = document.getElementById('storage-size');
@@ -1649,6 +1884,13 @@
                 }, 200);
             }
         }
+
+        // Display lock warning when user types
+        document.getElementById('app-lock-password').addEventListener('input', (e) => {
+            const warning = document.getElementById('app-lock-warning');
+            if(e.target.value.length > 0) warning.classList.remove('hidden');
+            else warning.classList.add('hidden');
+        });
 
         function saveSettings() {
             const key = document.getElementById('api-key-input').value.trim();
@@ -1693,7 +1935,7 @@
             text.textContent = message;
             
             // Style based on type
-            toast.className = `fixed bottom-16 md:bottom-6 right-6 transform transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-white text-sm font-medium`;
+            toast.className = `fixed bottom-24 md:bottom-6 right-4 md:right-6 transform transition-all duration-300 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-white text-sm font-medium`;
             if (type === 'success') {
                 toast.classList.add('bg-green-600');
                 icon.setAttribute('data-lucide', 'check-circle');
@@ -1745,8 +1987,15 @@
             }
         });
 
-        // Initialize App on load
-        window.addEventListener('DOMContentLoaded', initApp);
+        // Initialize App on load OR display lock screen
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('whyai_auth_salt')) {
+                document.getElementById('lock-screen').classList.remove('hidden');
+                lucide.createIcons();
+            } else {
+                initApp();
+            }
+        });
         
     </script>
 </body>
