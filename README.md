@@ -4,6 +4,9 @@ A local-first, AI-powered note-taking application and Evernote (.enex) explorer 
 
 WhyAI Notes allows you to import your Evernote backups, organize your thoughts, and interact with your personal knowledge base using Google's Gemini AI, all while keeping your data strictly local and secure.
 
+<img width="925" height="512" alt="Why AI Notes screenshot" src="https://github.com/user-attachments/assets/d066e7e7-d7c4-4766-b7e0-664c76ba991e" />
+
+
 ### ✨ Features
 
 🏠 Local-First Architecture: Your notes, images, PDFs, and chat histories are stored entirely offline in your browser's IndexedDB. No backend servers, no cloud databases, zero latency.
